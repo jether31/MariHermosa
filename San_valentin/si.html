@@ -2,123 +2,131 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>💖 Sí aceptó 💖</title>
+
 <style>
-    *{
-        box-sizing: border-box;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+*{
+    box-sizing:border-box;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-    body{
-        margin:0;
-        height:100vh;
-        background: linear-gradient(135deg, #ff9ecf, #ff6fb5);
-        overflow:hidden;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        position:relative;
-    }
+body{
+    margin:0;
+    height:100vh;
+    background:linear-gradient(135deg, #ff9ecf, #ff6fb5);
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+}
 
-    /* ===== Fotos alrededor (inicio) ===== */
-    .start-photo{
-        position:absolute;
-        width:100px;
-        height:100px;
-        object-fit:cover;
-        border-radius:12px;
-        box-shadow:0 6px 15px rgba(0,0,0,0.25);
-        opacity:0;
-        animation: aparecer 1s forwards, desaparecer 2s forwards 3s;
-        z-index:5;
-    }
+/* ===== Fotos alrededor ===== */
+.start-photo{
+    position:absolute;
+    width:100px;
+    height:100px;
+    object-fit:cover;
+    border-radius:12px;
+    box-shadow:0 6px 15px rgba(0,0,0,0.25);
+    opacity:0;
+    animation:aparecer 1s forwards, desaparecer 2s forwards 3s;
+    z-index:5;
+}
 
-    @keyframes aparecer{
-        to{ opacity:1; }
-    }
+@keyframes aparecer{
+    to{ opacity:1; }
+}
 
-    @keyframes desaparecer{
-        to{ opacity:0; }
-    }
+@keyframes desaparecer{
+    to{ opacity:0; }
+}
 
-    /* ===== Fotos cayendo ===== */
-    .falling-photo{
-        position:absolute;
-        width:65px;
-        height:65px;
-        object-fit:cover;
-        border-radius:10px;
-        animation: caer linear infinite;
-        opacity:0.95; /* MÁS VISIBLES */
-        z-index:1;
-    }
+/* ===== Fotos cayendo ===== */
+.falling-photo{
+    position:absolute;
+    width:65px;
+    height:65px;
+    object-fit:cover;
+    border-radius:10px;
+    animation:caer linear infinite;
+    opacity:0.95;
+    z-index:1;
+}
 
-    @keyframes caer{
-        0%{
-            transform: translateY(-10vh);
-        }
-        100%{
-            transform: translateY(110vh);
-        }
-    }
+@keyframes caer{
+    0%{ transform:translateY(-10vh); }
+    100%{ transform:translateY(110vh); }
+}
 
-    /* ===== Tarjeta ===== */
+/* ===== Tarjeta ===== */
+.card{
+    background:white;
+    padding:35px 30px;
+    border-radius:25px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.25);
+    text-align:center;
+    max-width:450px;
+    width:90%;
+    z-index:10;
+}
+
+.message{
+    font-size:26px;
+    font-weight:bold;
+    color:#e91e63;
+    line-height:1.4;
+}
+
+/* ===== 📱 MODO CELULAR ===== */
+@media (max-width:600px){
+
     .card{
-        background:white;
-        padding:35px 30px;
-        border-radius:25px;
-        box-shadow:0 15px 40px rgba(0,0,0,0.25);
-        text-align:center;
-        max-width:450px;
-        width:90%;
-        z-index:10;
-    }
-
-    .photo{
-        width:220px;
-        height:auto;
-        border-radius:15px;
-        margin-bottom:20px;
-        box-shadow:0 8px 20px rgba(0,0,0,0.25);
+        padding:25px 18px;
+        max-width:92%;
     }
 
     .message{
-        font-size:26px;
-        font-weight:bold;
-        color:#e91e63;
-        line-height:1.4;
+        font-size:20px;
     }
+
+    .start-photo{
+        width:70px;
+        height:70px;
+    }
+
+    .falling-photo{
+        width:45px;
+        height:45px;
+        opacity:0.85;
+    }
+}
 </style>
 </head>
+
+<body>
+
+<!-- 🎶 Música -->
+<audio id="bgMusic" loop>
+    <source src="musica.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 window.addEventListener("load", () => {
     const music = document.getElementById("bgMusic");
-
-    // intentar reproducir
     const playPromise = music.play();
 
     if (playPromise !== undefined) {
         playPromise.catch(() => {
-            // si el navegador lo bloquea, intenta en el primer click
             document.addEventListener("click", () => {
                 music.play();
             }, { once: true });
         });
     }
 });
-</script>
 
-<body>
-
-<!-- 🎶 MÚSICA DE FONDO -->
-<audio id="bgMusic" loop>
-    <source src="musica.mp3" type="audio/mpeg">
-</audio>
-
-
-<script>
-/* ===== TUS 6 FOTOS ===== */
+/* ===== TUS FOTOS ===== */
 const fotos = [
     "foto1.jpeg",
     "foto2.jpeg",
@@ -132,7 +140,10 @@ const fotos = [
     "foto10.jpeg"
 ];
 
-/* ===== POSICIONES alrededor del contenedor ===== */
+/* detectar móvil */
+const esMovil = window.innerWidth <= 600;
+
+/* posiciones */
 const posiciones = [
     {top:"15%", left:"20%"},
     {top:"20%", right:"18%"},
@@ -146,20 +157,26 @@ const posiciones = [
     {top:"80%", left:"60%"}
 ];
 
-/* ===== Fotos iniciales alrededor ===== */
-fotos.forEach((src, i)=>{
+/* menos fotos en móvil */
+const fotosIniciales = esMovil ? fotos.slice(0,6) : fotos;
+const posicionesIniciales = esMovil ? posiciones.slice(0,6) : posiciones;
+
+/* ===== Fotos iniciales ===== */
+fotosIniciales.forEach((src, i)=>{
     const img=document.createElement("img");
     img.className="start-photo";
     img.src=src;
 
-    Object.assign(img.style, posiciones[i]);
+    Object.assign(img.style, posicionesIniciales[i]);
 
     document.body.appendChild(img);
 });
 
-/* ===== Después de que desaparecen, empiezan a caer ===== */
+/* ===== Fotos cayendo ===== */
 setTimeout(()=>{
-    for(let i=0;i<30;i++){
+    const cantidad = esMovil ? 18 : 30;
+
+    for(let i=0;i<cantidad;i++){
         const img=document.createElement("img");
         img.className="falling-photo";
         img.src=fotos[i % fotos.length];
@@ -172,8 +189,6 @@ setTimeout(()=>{
 </script>
 
 <div class="card">
-  
-
     <div class="message">
         Gracias, mi cachetoncita hermosa 💖<br>
         Ya quiero que sea mañana ✨ <br>
@@ -183,3 +198,4 @@ setTimeout(()=>{
 
 </body>
 </html>
+
